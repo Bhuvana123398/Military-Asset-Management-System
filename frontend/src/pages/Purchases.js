@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ShoppingCart, History } from 'lucide-react';
-
 const Purchases = () => {
   const [formData, setFormData] = useState({ assetType: '', quantity: '', toBase: 'Base Alpha' });
   const [status, setStatus] = useState('');

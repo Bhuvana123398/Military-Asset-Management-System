@@ -80,4 +80,13 @@ router.get('/history/transfers', authorize(['Admin', 'Commander', 'Logistics']),
         res.status(500).json({ error: err.message });
     }
 });
+router.get('/history/purchases', authorize(['Admin', 'Commander', 'Logistics']), async (req, res) => {
+    try {
+        const history = await Transaction.find({ type: 'PURCHASE' }).sort({ timestamp: -1 });
+        res.json(history);
+    } catch (err) {
+        console.error("Error fetching purchase history:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
 module.exports = router;
