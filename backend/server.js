@@ -8,6 +8,9 @@ app.use(cors());
 const authRoutes = require('./routes/auth');
 const dashboardRoutes = require('./routes/dashboard');
 const assetRoutes = require('./routes/assets');
+app.get('/', (req, res) => {
+  res.send('Military Asset Management API is running...');
+});
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/assets', assetRoutes); 
@@ -15,6 +18,3 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Database Connected"))
   .catch(err => console.log(err));
 app.listen(5000, () => console.log("Server on 5000"));
-app.get('/', (req, res) => {
-  res.send('Military Asset Management API is running...');
-});
