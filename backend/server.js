@@ -15,6 +15,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/assets', assetRoutes); 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("Database Connected"))
-  .catch(err => console.log(err));
-app.listen(5000, () => console.log("Server on 5000"));
+  .then(() => console.log("Database Connected Successfully"))
+  .catch(err => console.error("Database Connection Error:", err));
+
+// Port configuration for Deployment (Render/Heroku)
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
