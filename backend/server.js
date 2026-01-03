@@ -15,3 +15,6 @@ mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Database Connected"))
   .catch(err => console.log(err));
 app.listen(5000, () => console.log("Server on 5000"));
+app.get('/', (req, res) => {
+  res.send('Military Asset Management API is running...');
+});
