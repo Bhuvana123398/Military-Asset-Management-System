@@ -10,34 +10,35 @@ const TransferPage = () => {
   });
   const [msg, setMsg] = useState('');
   const [logs, setLogs] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
   const fetchLogs = async () => {
     try {
         const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/assets/history/transfers', {
+        const res = await axios.get(`${API_URL}/api/assets/history/transfers`, {
             headers: { Authorization: `Bearer ${token}` }
         });
-        console.log("Logs received:", res.data); 
         setLogs(res.data);
     } catch (err) {
         console.error("Error fetching logs:", err);
     }
   };
-    useEffect(() => {
-        fetchLogs();
-    }, []);
+  useEffect(() => {
+    fetchLogs();
+  }, [API_URL]);
   const handleTransfer = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5000/api/assets/transfer', formData, {
+      await axios.post(`${API_URL}/api/assets/transfer`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMsg('✅ Transfer Authorized and Logged');
-      setFormData({ assetType: '', quantity: '', fromBase: 'Base Alpha', toBase: 'Base Bravo' }); // Reset
-      fetchLogs(); // Refresh the table
-    } catch (err) { setMsg('Error: Ensure Backend is running'); }
+      setFormData({ assetType: '', quantity: '', fromBase: 'Base Alpha', toBase: 'Base Bravo' }); 
+      fetchLogs(); 
+    } catch (err) { 
+      setMsg('Error executing transfer. Check backend.'); 
+    }
   };
-
   return (
     <div className="p-10 max-w-5xl mx-auto">
       <h1 className="text-3xl font-extrabold mb-8 flex items-center gap-3">
@@ -92,7 +93,6 @@ const TransferPage = () => {
             </select>
           </div>
         </div>
-
         <button className="w-full bg-slate-900 text-white font-black py-4 rounded-2xl hover:bg-black transition-all shadow-lg active:scale-95">
           EXECUTE MOVEMENT
         </button>
@@ -116,7 +116,7 @@ const TransferPage = () => {
             <tbody>
               {logs.map((log, index) => (
                 <tr key={index} className="border-b last:border-0 hover:bg-gray-50 transition-colors">
-                  <td className="p-4 font-bold text-gray-800">{log.assetType}</td>
+                  <td className="p-4 font-bold text-gray-800 uppercase">{log.assetType}</td>
                   <td className={`p-4 font-black text-xs ${log.type === 'TRANSFER_IN' ? 'text-green-600' : 'text-red-600'}`}>
                     <span className="bg-gray-100 px-2 py-1 rounded">{log.type.replace('_', ' ')}</span>
                   </td>
@@ -140,5 +140,4 @@ const TransferPage = () => {
     </div>
   );
 };
-
 export default TransferPage;

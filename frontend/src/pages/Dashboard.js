@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Info } from 'lucide-react';
-
 const Dashboard = () => {
   const [showNetModal, setShowNetModal] = useState(false);
   const [stats, setStats] = useState({
@@ -14,13 +13,13 @@ const Dashboard = () => {
     assigned: 0,
     closingBalance: 1200
   });
-
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const token = localStorage.getItem('token');
         const baseFilter = localStorage.getItem('base') || 'All';
-        const res = await axios.get(`http://localhost:5000/api/dashboard/stats?base=${baseFilter}`, {
+        const res = await axios.get(`${API_URL}/api/dashboard/stats?base=${baseFilter}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setStats(res.data);
@@ -29,15 +28,12 @@ const Dashboard = () => {
       }
     };
     fetchStats();
-  }, []);
-
-  // ✅ DEFINING VARIABLES BEFORE THE RETURN (Fixes your 'not defined' error)
+  }, [API_URL]); 
   const opening = stats.openingBalance || 1200;
   const net = stats.netMovement || 0;
   const expended = stats.expended || 0;
   const assigned = stats.assigned || 0;
   const closing = stats.closingBalance || (opening + net - expended);
-
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-8">
@@ -51,11 +47,8 @@ const Dashboard = () => {
           </select>
         </div>
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
         <StatCard title="Opening Balance" value={opening} color="bg-white border-gray-200" />
-        
-        {/* Net Movement Card */}
         <div 
           onClick={() => setShowNetModal(true)}
           className="bg-blue-600 text-white p-6 rounded-2xl shadow-xl cursor-pointer hover:bg-blue-700 transition-all relative"
@@ -66,11 +59,10 @@ const Dashboard = () => {
         </div>
 
         <StatCard title="Assigned" value={assigned} color="bg-white" />
-        <StatCard title="Expended" value={expended} color="bg-white text-red-500" />
+        <StatCard title="Expended" value={expended} color="bg-white text-red-600" />
         <StatCard title="Closing Balance" value={closing} color="bg-green-700 text-white" />
       </div>
 
-      {/* NET MOVEMENT MODAL [BONUS FEATURE] */}
       {showNetModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-3xl shadow-2xl w-full max-w-sm">
@@ -105,13 +97,10 @@ const Dashboard = () => {
     </div>
   );
 };
-
-// Sub-component for Cards
 const StatCard = ({ title, value, color }) => (
   <div className={`${color} p-6 rounded-2xl shadow-sm border`}>
     <p className="text-xs font-bold uppercase text-gray-500 mb-2">{title}</p>
     <p className="text-3xl font-black">{value}</p>
   </div>
 );
-
 export default Dashboard;
