@@ -11,7 +11,8 @@ const authorize = (roles = []) => {
         return res.status(403).json({ message: "Forbidden: Access Denied" });
       }
       next();
-    } catch (err) {
+    } 
+    catch (err) {
       return res.status(403).json({ message: "Invalid or expired token" });
     }
   };

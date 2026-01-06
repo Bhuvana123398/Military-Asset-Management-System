@@ -9,7 +9,6 @@ const TransactionSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   fromBase: { type: String, default: 'External' },
   toBase: { type: String, required: true },
-  // CHANGE THIS LINE BELOW:
   performedBy: { type: String }, 
   timestamp: { type: Date, default: Date.now }
 });
